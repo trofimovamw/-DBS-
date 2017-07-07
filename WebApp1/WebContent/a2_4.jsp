@@ -19,6 +19,7 @@
 		<title>Aufgabe 2.4: Visualisierung der Haeufigkeit des Auftretens aller Hashtags im Zeitverlauf</title>
 	</head>
 	
+	
 	<body>
 		<div>
    		<button onclick="showYear()">Gesamtes Jahr anzeigen</button>

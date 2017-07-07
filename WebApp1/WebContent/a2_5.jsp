@@ -53,6 +53,7 @@
 		
 		<script type="text/javascript">
 		
+		
 		// Anzeigen des gesamten Jahres kommend von der Monatsperspektive
 		function showYear(){
 			location.reload();

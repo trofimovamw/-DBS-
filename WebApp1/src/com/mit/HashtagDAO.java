@@ -118,3 +118,4 @@ public class HashtagDAO {
 		return hc.substring(0, hc.length()-1);
 	}
 }
+
