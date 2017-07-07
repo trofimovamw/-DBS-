@@ -20,6 +20,9 @@
 	</head>
 	
 	<body>
+		<div>
+   		<button onclick="showYear()">Gesamtes Jahr anzeigen</button>
+   		</div>
 		<!-- div, in dem das Diagramm gerendert wird -->
 		<div>
 			<style>
@@ -40,6 +43,12 @@
 		<%String hc = HashtagDAO.getHashtagCount();	//Hashtags Anzahl%>
 		
 		<script type="text/javascript">
+		// Anzeigen des gesamten Jahres kommend von der Monatsperspektive
+		function showYear(){
+			location.reload();
+		}
+		
+		
 		//  Variablen zur Aggregation auf Monatsebene
 			var monthCount = [0,0,0,0,0,0,0,0,0];
 			var months = ["2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09"]
@@ -77,7 +86,6 @@
 				var set = hArray[i].split("+++");
 				var date = set[0];
 				var count = set[1];
-				console.log(date+"----"+count);
 				// Anzahl auf Monatsebene aufaddieren und Monatsvariablen aufteilen
 				if(date.substring(0,7) == "2016-01"){
 					monthCount[0] += parseInt(count);

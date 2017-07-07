@@ -20,11 +20,19 @@
 	</head>
 	
 	<body>
+		<div>
+		<label>Bitte wählen Sie einen Hashtag aus</label>
+		<select id="hSelect"></select>
+		<button onclick="loadSingleHashtag()">Hashtag anzeigen</button>
+		</div>
+		<div>
+   		<button onclick="showYear()">Gesamtes Jahr anzeigen</button>
+   		</div>
 		<!-- div, in dem das Diagramm gerendert wird -->
 		<div>
 			<style>
 			    #graph-container {
-			      top: 0;
+			      top: 100;
 			      bottom: 0;
 			      left: 0;
 			      right: 0;
@@ -33,98 +41,130 @@
 			 </style>	
       		<div id="chartContainer"></div>
    		</div>
+   		
 		
 		<jsp:useBean id="obj" class="com.mit.HashtagBean"/>
 		<jsp:setProperty property="*" name="obj"/>
 		
-		<%String hc = HashtagDAO.getSingleHashtagCount();	//Hashtags Anzahl%>
+		<%
+		String ht = request.getParameter("hashtag");	// ausgewaehlter Hashtag
+		String hc = HashtagDAO.getSingleHashtagCount(ht);  //Anzahl der Hashtags laden
+		String hashtags = HashtagDAO.getHashtags();	// Hashtags fuer Select%>
 		
 		<script type="text/javascript">
-		//  Variablen zur Aggregation auf Monatsebene
-			var monthCount = [0,0,0,0,0,0,0,0,0];
-			var months = ["2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09"]
-		//  Variablen fuer Januar
-			var janCount = [];
-			var janDays = [];
-		//  Variablen fuer Februar
-			var febCount = [];
-			var febDays = [];
-		//  Variablen fuer Maerz
-			var marCount = [];
-			var marDays = [];
-		//  Variablen fuer April
-			var aprCount = [];
-			var aprDays = [];
-		//  Variablen fuer Mai
-			var mayCount = [];
-			var mayDays = [];
-		//  Variablen fuer Juni
-			var junCount = [];
-			var junDays = [];
-		//  Variablen fuer Juli
-			var julCount = [];
-			var julDays = [];
-		//  Variablen fuer August
-			var augCount = [];
-			var augDays = [];
-		//  Variablen fuer September
-			var sepCount = [];
-			var sepDays = [];
-			
-			var h = '<%=hc%>';
-			hArray = h.split(";");
-			for(i = 0; i<hArray.length; i++){
-				var set = hArray[i].split("+++");
-				var date = set[0];
-				var count = set[1];
-				console.log(date+"----"+count);
-				// Anzahl auf Monatsebene aufaddieren und Monatsvariablen aufteilen
-				if(date.substring(0,7) == "2016-01"){
-					monthCount[0] += parseInt(count);
-					janDays.push(date);
-					janCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-02"){
-					monthCount[1] += parseInt(count);
-					febDays.push(date);
-					febCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-03"){
-					monthCount[2] += parseInt(count);
-					marDays.push(date);
-					marCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-04"){
-					monthCount[3] += parseInt(count);
-					aprDays.push(date);
-					aprCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-05"){
-					monthCount[4] += parseInt(count);
-					mayDays.push(date);
-					mayCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-06"){
-					monthCount[5] += parseInt(count);
-					junDays.push(date);
-					junCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-07"){
-					monthCount[6] += parseInt(count);
-					julDays.push(date);
-					julCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-08"){
-					monthCount[7] += parseInt(count);
-					augDays.push(date);
-					augCount.push(parseInt(count));
-				}else if(date.substring(0,7) == "2016-09"){
-					monthCount[8] += parseInt(count);
-					sepDays.push(date);
-					sepCount.push(parseInt(count));
-				}
-				
-			}
 		
-			window.onload = function () {
+		// Anzeigen des gesamten Jahres kommend von der Monatsperspektive
+		function showYear(){
+			location.reload();
+		}
+		
+		// Anzeigen des ausgeaehlten Hashtags
+		function loadSingleHashtag(){
+			var e = document.getElementById("hSelect");
+			window.open("http://localhost:8081/WebApp1/a2_5.jsp?hashtag="+e.options[e.selectedIndex].value);
+		}
+		
+			window.onload = loadTags("MakeAmericaGreatAgain");
+				
+				
+				function loadTags(tag) {
+					
+					// Werte in Select schreiben
+					var htags =  '<%=hashtags%>'
+					var tagArray = htags.split(";");
+					for(i=0; i<tagArray.length; i++){
+						var x = document.getElementById("hSelect");
+						var option = document.createElement("option");
+						option.text = tagArray[i];
+						x.add(option); 
+					}
+					
+					// Deafult Selektion auswaehlen
+					$("#hSelect").val('<%=ht%>');
+					
+					
+					//  Variablen zur Aggregation auf Monatsebene
+						var monthCount = [0,0,0,0,0,0,0,0,0];
+						var months = ["2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09"]
+					//  Variablen fuer Januar
+						var janCount = [];
+						var janDays = [];
+					//  Variablen fuer Februar
+						var febCount = [];
+						var febDays = [];
+					//  Variablen fuer Maerz
+						var marCount = [];
+						var marDays = [];
+					//  Variablen fuer April
+						var aprCount = [];
+						var aprDays = [];
+					//  Variablen fuer Mai
+						var mayCount = [];
+						var mayDays = [];
+					//  Variablen fuer Juni
+						var junCount = [];
+						var junDays = [];
+					//  Variablen fuer Juli
+						var julCount = [];
+						var julDays = [];
+					//  Variablen fuer August
+						var augCount = [];
+						var augDays = [];
+					//  Variablen fuer September
+						var sepCount = [];
+						var sepDays = [];
+						
+						var h = '<%=hc%>';
+						hArray = h.split(";");
+						for(i = 0; i<hArray.length; i++){
+							var set = hArray[i].split("+++");
+							var date = set[0];
+							var count = set[1];
+							// Anzahl auf Monatsebene aufaddieren und Monatsvariablen aufteilen
+							if(date.substring(0,7) == "2016-01"){
+								monthCount[0] += parseInt(count);
+								janDays.push(date);
+								janCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-02"){
+								monthCount[1] += parseInt(count);
+								febDays.push(date);
+								febCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-03"){
+								monthCount[2] += parseInt(count);
+								marDays.push(date);
+								marCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-04"){
+								monthCount[3] += parseInt(count);
+								aprDays.push(date);
+								aprCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-05"){
+								monthCount[4] += parseInt(count);
+								mayDays.push(date);
+								mayCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-06"){
+								monthCount[5] += parseInt(count);
+								junDays.push(date);
+								junCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-07"){
+								monthCount[6] += parseInt(count);
+								julDays.push(date);
+								julCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-08"){
+								monthCount[7] += parseInt(count);
+								augDays.push(date);
+								augCount.push(parseInt(count));
+							}else if(date.substring(0,7) == "2016-09"){
+								monthCount[8] += parseInt(count);
+								sepDays.push(date);
+								sepCount.push(parseInt(count));
+							}
+							
+						}
 
 				//Diagramm fuer das ganze Jahr
 					var options = {
 						title: {
-							text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf auf Monatsebene - Durch Klicken auf die Balken werden die einzelnen Monate angezeigt"
+							text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf auf Monatsebene - Durch Klicken auf die Balken werden die einzelnen Monate angezeigt"
 						},
 				                animationEnabled: true,
 						data: [
@@ -149,7 +189,7 @@
 				// Diagramm fuer Januar
 					var jan = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im Januar"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im Januar"
 							},
 					                animationEnabled: true,
 							data: [
@@ -189,7 +229,7 @@
 					// Diagramm fuer Februar
 					var feb = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im Februar"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im Februar"
 							},
 					                animationEnabled: true,
 							data: [
@@ -233,7 +273,7 @@
 					// Diagramm fuer Maerz
 					var mar = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im März"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im März"
 							},
 					                animationEnabled: true,
 							data: [
@@ -279,7 +319,7 @@
 					// Diagramm fuer April
 					var apr = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im April"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im April"
 							},
 					                animationEnabled: true,
 							data: [
@@ -325,7 +365,7 @@
 					// Diagramm fuer Mai
 					var may = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im Mai"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im Mai"
 							},
 					                animationEnabled: true,
 							data: [
@@ -371,7 +411,7 @@
 					// Diagramm fuer Juni
 					var jun = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im Juni"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im Juni"
 							},
 					                animationEnabled: true,
 							data: [
@@ -417,7 +457,7 @@
 					// Diagramm fuer Juli
 					var jul = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im Juli"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im Juli"
 							},
 					                animationEnabled: true,
 							data: [
@@ -463,7 +503,7 @@
 					// Diagramm fuer August
 					var aug = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im August"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im August"
 							},
 					                animationEnabled: true,
 							data: [
@@ -509,7 +549,7 @@
 					// Diagramm fuer September
 					var sep = {
 							title: {
-								text: "Häufigkeit des Hashtags \"#MakeAmericaGreatAgain\" im Zeitverlauf im Septemeber"
+								text: "Häufigkeit des Hashtags \"#" + '<%=ht%>' + "\" im Zeitverlauf im Septemeber"
 							},
 					                animationEnabled: true,
 							data: [

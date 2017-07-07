@@ -12,17 +12,14 @@
 <input type="submit" value="Aufgabe 2.2"/>
 </form>
 
-<form name="f2" method="get" action="a2_3.jsp">
+<form name="f2" method="get" action="network.html">
 <input type="submit" value="Aufgabe 2.3"/>
 </form>
 
 <form name="f3" method="get" action="a2_4.jsp">
 <input type="submit" value="Aufgabe 2.4"/>
 </form>
-
-<form name="f4" method="get" action="a2_5.jsp">
-<input type="submit" value="Aufgabe 2.5"/>
-</form>
+<button onclick="window.location.replace('http://localhost:8081/WebApp1/a2_5.jsp?hashtag=MakeAmericaGreatAgain')">Aufgabe 2.5</button>
 
 </body>
 </html>

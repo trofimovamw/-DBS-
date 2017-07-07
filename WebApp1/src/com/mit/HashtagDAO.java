@@ -10,6 +10,7 @@ public class HashtagDAO {
 	static Statement stmtgetH;
 	static Statement stmtgetC;
 	static Statement stmtgetHC;
+	static PreparedStatement pstmt;
 	
 //	Testmethode zum Erlernen des Inputs in Postgres via JSP
 	public static int insertHashtag(HashtagBean u){
@@ -90,20 +91,21 @@ public class HashtagDAO {
 	}
 	
 //	Gibt zu jedem Tag die Anzahl eines bestimmten verwendeten Hashtags zurueck
-	public static String getSingleHashtagCount(){
+	public static String getSingleHashtagCount(String hashtag){
 		String hc = "";
 		ArrayList<Object> counts = new ArrayList<Object>();
 		try {
 			conn = ConnectionProvider.getCon();
-			stmtgetHC = conn.createStatement();
 			String sql = "SELECT t.\"time\", count(c.htext) AS counthashtags " +
 						 "FROM \"Tweet\" t " +
 						 "JOIN contains c " +
 						 "ON t.\"TweetID\"::text = c.\"TweetID\"::text "+
-						 "WHERE c.\"htext\" = 'MakeAmericaGreatAgain' " +
+						 "WHERE c.\"htext\" = ? " +
 						 "GROUP BY t.\"time\" " +
 						 "ORDER BY t.\"time\";";
-			ResultSet rs = stmtgetHC.executeQuery(sql);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, hashtag);
+			ResultSet rs = pstmt.executeQuery();
 			while(rs.next()){
 				counts.add(rs.getDate(1)+"+++"+rs.getInt(2));
 			}
