@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by maria on 24/06/17.
  */
+
 public class Clustering {
     public static ArrayList<String> centers;
     public static ArrayList<String> oldCenters;
